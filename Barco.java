@@ -57,10 +57,11 @@ public abstract class Barco
     /**
      * Devuelve un String con información básica del barco 
      */
+    @Override
     public String toString()
     {
-        return "Matricula : " + matricula + "\n" + "Eslora: " + eslora + " m\n"+
-                "Año de fabricación" + anioFabricacion + "\n" +
+        return "Matrícula: " + matricula + "\n" + "Eslora: " + eslora + " m\n"+
+                "Año de fabricación: " + anioFabricacion + "\n" +
                 "Coeficiente de bernua: " + getCoeficienteBernua() + "\n";
     }
 }
