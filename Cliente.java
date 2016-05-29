@@ -34,7 +34,7 @@ public class Cliente
      */
     public String getDni() 
     {
-        return null;
+        return dni;
     }
 
     /**
