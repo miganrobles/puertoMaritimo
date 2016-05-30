@@ -59,7 +59,7 @@ public class Puerto
      */
     public float liquidarAlquiler(int posicion)
     {
-        float costeAlquiler = 0;
+        float costeAlquiler = -1;
         if (posicion >= 0 && posicion < NUMERO_AMARRES) {
             if (alquileres[posicion] != null) {
                 costeAlquiler = alquileres[posicion].getCosteAlquiler();
