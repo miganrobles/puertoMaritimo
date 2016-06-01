@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 /**
  * Write a description of class Puerto here.
@@ -8,7 +9,7 @@
 public class Puerto
 {
     // Almacena los alquileres
-    private Alquiler[] alquileres;
+    private ArrayList<Alquiler> alquileres;
     // Número de amarres que tiene el puerto
     private static final int NUMERO_AMARRES = 4;
 
@@ -17,7 +18,7 @@ public class Puerto
      */
     public Puerto() 
     {
-        alquileres = new Alquiler[NUMERO_AMARRES];
+        alquileres = new ArrayList<>();
     }
 
     /**
@@ -27,13 +28,33 @@ public class Puerto
     public int addAlquiler(int numeroDias, Cliente cliente, Barco barco) 
     {
         int numAmarre = -1;
-        for (int i = 0; i < NUMERO_AMARRES && numAmarre == -1; i++) {
-            if (alquileres[i] == null) {
-                alquileres[i] = new Alquiler(numeroDias, cliente, barco);
-                numAmarre = i;
-            }
+        if (alquileres.size() < NUMERO_AMARRES) {
+            for (int index = 0; index < NUMERO_AMARRES && numAmarre == -1; index++) {
+                if (estadoAmarre(index) == null) {
+                    numAmarre = index;
+                    alquileres.add(new Alquiler(numeroDias, cliente, barco, numAmarre));
+                }
+            }          
         }
         return numAmarre;
+    }
+
+    /**
+     * Se le pasa un número de amarre y devuleve null si esta libre
+     * o el alquiler si no lo está
+     */
+    private Alquiler estadoAmarre(int numeroAmarre)
+    {
+        Alquiler alquiler = null;
+        int index = 0;
+        int amarresAlquilados = alquileres.size();
+        while (index < amarresAlquilados && alquiler == null)  {
+            if (alquileres.get(index).getNumAmarre() == numeroAmarre) {
+                alquiler = alquileres.get(index);
+            }
+            index++;
+        }
+        return alquiler;
     }
 
     /**
@@ -42,36 +63,32 @@ public class Puerto
      */
     public void verEstadoAmarres()
     {
-        for (int i = 0; i < alquileres.length; i++) {
-            if (alquileres[i] == null) {
-                System.out.println("Amarre " + i + " libre");
+        for (int index = 0; index < NUMERO_AMARRES; index++) {
+            Alquiler alquiler = estadoAmarre(index);
+            if (alquiler == null) {
+                System.out.println("Amarre " + index + " libre");
             }
             else {
-                System.out.println("Amarre " + i + " ocupado, precio del alquiler: " + alquileres[i].getCosteAlquiler() + "€");
+                System.out.println("Amarre " + index + " ocupado, precio del alquiler: " 
+                    + alquiler.getCosteAlquiler() + "€");
             }
         } 
     }
 
     /**
-     * Liquida un aquiler pasándole la posción del mismo y devuelve el coste
-     * Si el amarre situado en la posición introducida no está alquilado o 
-     * la posición introducida no es correcta muestra un mensage por pantalla y devuelve 0
+     * Liquida un aquiler pasándole la posción del amarre y devuelve el coste 
+     * o devuelve -1 si el amarre no está alquilado
      */
     public float liquidarAlquiler(int posicion)
     {
         float costeAlquiler = -1;
-        if (posicion >= 0 && posicion < NUMERO_AMARRES) {
-            if (alquileres[posicion] != null) {
-                costeAlquiler = alquileres[posicion].getCosteAlquiler();
-                alquileres[posicion] = null;
-            }
-            else {
-                System.out.println("El número de amarre introducido no está alquilado");
+        if (alquileres.size() > 0) {
+            Alquiler alquiler = estadoAmarre(posicion);
+            if (alquiler != null) {
+                costeAlquiler = alquiler.getCosteAlquiler();
+                alquileres.remove(alquiler);
             }
         }
-        else {
-            System.out.println("El valor introcudido no es correcto");
-        } 
         return costeAlquiler;
     }
 }
